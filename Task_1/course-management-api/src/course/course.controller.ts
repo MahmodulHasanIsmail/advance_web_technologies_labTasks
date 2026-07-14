@@ -42,7 +42,7 @@ export class CourseController {
         return this.courseService.deleteCourse(id);
     }
 
-    @Post('upload')
+    @Post(':id/upload')
 @UseInterceptors(
   FileInterceptor('file', {
     storage: diskStorage({
@@ -55,8 +55,12 @@ export class CourseController {
     }),
   }),
 )
-uploadFile(@UploadedFile() file: Express.Multer.File) {
+uploadFile(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File) {
   return {
+    message: `File uploaded successfully for course ${id}`,
+    courseId: id,
     filename: file.filename,
     originalname: file.originalname,
     size: file.size,
